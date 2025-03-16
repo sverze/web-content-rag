@@ -44,8 +44,15 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
         # Create messages for the model
         messages = prompt.invoke({"question": state["question"], "context": docs_content})
         
-        # Initialize the Anthropic model (Claude 3.7 Sonnet)
-        llm = ChatAnthropic(model="claude-3-sonnet-20240229", temperature=0.2)
+        # Initialize the Anthropic model (Claude 3 Sonnet)
+        try:
+            # Try with the specific version first
+            llm = ChatAnthropic(model="claude-3-sonnet-20240229-v1:0", temperature=0.2)
+        except Exception as e:
+            print(f"Error with specific model version: {str(e)}")
+            print("Falling back to generic Claude 3 Sonnet model...")
+            # Fall back to the generic model name
+            llm = ChatAnthropic(model="claude-3-sonnet", temperature=0.2)
         
         # Generate the response
         response = llm.invoke(messages)
