@@ -5,6 +5,7 @@ This app allows users to provide a URL and ask questions about the content.
 
 import os
 import streamlit as st
+import sys
 from typing import Optional
 
 from document_processor import load_and_process_url
@@ -26,39 +27,49 @@ This application allows you to ask questions about the content of any web page.
 3. Ask questions about the content
 """)
 
+# Check for Anthropic API key
+def get_api_key():
+    # Check if API key is passed as a command-line argument
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    
+    # Check if API key is in environment variables
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if api_key:
+        return api_key
+    
+    # If no API key is found, raise an exception
+    st.error("Anthropic API key not found. Please provide it as a command-line argument or set the ANTHROPIC_API_KEY environment variable.")
+    st.stop()
+
+# Set the API key
+api_key = get_api_key()
+os.environ["ANTHROPIC_API_KEY"] = api_key
+
 # Initialize session state variables
 if "vector_store" not in st.session_state:
     st.session_state.vector_store = None
 if "rag_chain" not in st.session_state:
     st.session_state.rag_chain = None
-if "api_key_set" not in st.session_state:
-    st.session_state.api_key_set = False
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# API Key input
+# Display configuration info in sidebar
 with st.sidebar:
     st.header("Configuration")
-    api_key = st.text_input("Enter your Anthropic API Key:", type="password")
-    if api_key:
-        os.environ["ANTHROPIC_API_KEY"] = api_key
-        st.session_state.api_key_set = True
-        st.success("API Key set!")
+    st.success("Anthropic API Key is set!")
 
 # URL input and processing
 url_input = st.text_input("Enter a URL to analyze:", placeholder="https://example.com")
 
 if url_input and st.button("Process URL"):
-    if not st.session_state.api_key_set:
-        st.error("Please enter your Anthropic API Key in the sidebar first.")
-    else:
-        with st.spinner("Loading and processing the web page..."):
-            try:
-                st.session_state.vector_store = load_and_process_url(url_input)
-                st.session_state.rag_chain = create_rag_chain(st.session_state.vector_store)
-                st.success("Web page processed successfully! You can now ask questions.")
-            except Exception as e:
-                st.error(f"Error processing the URL: {str(e)}")
+    with st.spinner("Loading and processing the web page..."):
+        try:
+            st.session_state.vector_store = load_and_process_url(url_input)
+            st.session_state.rag_chain = create_rag_chain(st.session_state.vector_store)
+            st.success("Web page processed successfully! You can now ask questions.")
+        except Exception as e:
+            st.error(f"Error processing the URL: {str(e)}")
 
 # Q&A section
 st.header("Ask Questions")
