@@ -56,12 +56,9 @@ def load_documents_from_url(url: str) -> List[Document]:
     
     documents = loader.load()
     
-    # Print the content for demonstration
+    # Print the content for demonstration (only in CLI mode)
     if documents:
-        print("\n--- Page Content ---\n")
-        for doc in documents:
-            print(doc.page_content[:1000] + "...\n" if len(doc.page_content) > 1000 else doc.page_content)
-        print("\n--- End of Content ---\n")
+        print(f"Loaded {len(documents)} documents from {url}")
     else:
         print("No content was loaded from the URL.")
     

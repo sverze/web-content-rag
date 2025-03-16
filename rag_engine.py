@@ -44,7 +44,7 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
         # Create messages for the model
         messages = prompt.invoke({"question": state["question"], "context": docs_content})
         
-        # Initialize the Anthropic model (Claude 3 Sonnet)
+        # Initialize the Anthropic model (Claude 3 Opus)
         llm = ChatAnthropic(temperature=0.5, max_tokens=1000, model_name="claude-3-opus-20240229")
         
         # Generate the response
