@@ -6,7 +6,7 @@ Handles the creation and querying of the RAG chain.
 from typing import Dict, Any, List
 
 from langchain_core.documents import Document
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.vectorstores import VectorStore
 from langchain import hub
 from langgraph.graph import START, StateGraph
@@ -28,10 +28,41 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
     Returns:
         A compiled LangGraph for RAG
     """
-    # TODO: Implement RAG chain creation using LangGraph
-    # Define the retrieve and generate functions
-    # Create and compile the StateGraph
-    pass
+    # Define the retrieve function
+    def retrieve(state: State):
+        retrieved_docs = vector_store.similarity_search(state["question"])
+        return {"context": retrieved_docs}
+    
+    # Define the generate function
+    def generate(state: State):
+        # Get a prompt from the hub or create a custom one
+        prompt = hub.pull("rlm/rag-prompt")
+        
+        # Join the document contents
+        docs_content = "\n\n".join(doc.page_content for doc in state["context"])
+        
+        # Create messages for the model
+        messages = prompt.invoke({"question": state["question"], "context": docs_content})
+        
+        # Initialize the Anthropic model (Claude Sonnet)
+        llm = ChatAnthropic(model="claude-3-sonnet-20240229")
+        
+        # Generate the response
+        response = llm.invoke(messages)
+        
+        return {"answer": response.content}
+    
+    # Create and compile the graph
+    graph_builder = StateGraph(State)
+    graph_builder.add_node("retrieve", retrieve)
+    graph_builder.add_node("generate", generate)
+    
+    # Define the edges
+    graph_builder.add_edge(START, "retrieve")
+    graph_builder.add_edge("retrieve", "generate")
+    
+    # Compile the graph
+    return graph_builder.compile()
 
 def query_rag_chain(rag_chain: Any, question: str) -> str:
     """
@@ -44,6 +75,8 @@ def query_rag_chain(rag_chain: Any, question: str) -> str:
     Returns:
         The answer from the RAG chain
     """
-    # TODO: Implement RAG chain querying
-    # Invoke the chain with the question and return the answer
-    pass
+    # Invoke the chain with the question
+    result = rag_chain.invoke({"question": question})
+    
+    # Return the answer
+    return result["answer"]

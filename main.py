@@ -11,7 +11,8 @@ from typing import List, Dict, Any
 from langchain_core.documents import Document
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_anthropic import ChatAnthropic
 from langchain_core.vectorstores import VectorStore
 from langchain_core.prompts import PromptTemplate
 from langchain import hub
@@ -31,22 +32,22 @@ def main():
     args = parser.parse_args()
 
     # Check for API key
-    if not os.environ.get("OPENAI_API_KEY"):
-        api_key = input("Please enter your OpenAI API key: ")
-        os.environ["OPENAI_API_KEY"] = api_key
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        api_key = input("Please enter your Anthropic API key: ")
+        os.environ["ANTHROPIC_API_KEY"] = api_key
 
     # Initialize the RAG application
     if args.url:
         # Process the URL provided as argument
         vector_store = load_and_process_url(args.url)
         print("Document processing complete. Vector store created.")
-        # interactive_mode(vector_store)
+        interactive_mode(vector_store)
     else:
         # Interactive mode from the beginning
         url = input("Please enter a URL to analyze: ")
         vector_store = load_and_process_url(url)
         print("Document processing complete. Vector store created.")
-        # interactive_mode(vector_store)
+        interactive_mode(vector_store)
 
 def interactive_mode(vector_store: VectorStore):
     """

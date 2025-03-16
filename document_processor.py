@@ -9,7 +9,7 @@ from typing import List, Optional
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.vectorstores import VectorStore
 from langchain.vectorstores.faiss import FAISS
 
@@ -105,8 +105,8 @@ def create_vector_store(documents: List[Document]) -> VectorStore:
     """
     print("Creating vector store from document chunks...")
     
-    # Initialize the OpenAI embeddings
-    embeddings = OpenAIEmbeddings()
+    # Initialize the HuggingFace embeddings (as a replacement for OpenAI embeddings)
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     # Create a FAISS vector store from the documents
     vector_store = FAISS.from_documents(documents, embeddings)
