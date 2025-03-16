@@ -54,11 +54,6 @@ if "rag_chain" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Display configuration info in sidebar
-with st.sidebar:
-    st.header("Configuration")
-    st.success("Anthropic API Key is set!")
-
 # URL input and processing
 url_input = st.text_input("Enter a URL to analyze:", placeholder="https://example.com")
 
