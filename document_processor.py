@@ -106,7 +106,12 @@ def create_vector_store(documents: List[Document]) -> VectorStore:
     print("Creating vector store from document chunks...")
     
     # Initialize the HuggingFace embeddings (as a replacement for OpenAI embeddings)
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    try:
+        embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    except Exception as e:
+        print(f"Error initializing embeddings: {str(e)}")
+        print("Falling back to default HuggingFace embeddings...")
+        embeddings = HuggingFaceEmbeddings()
     
     # Create a FAISS vector store from the documents
     vector_store = FAISS.from_documents(documents, embeddings)

@@ -57,6 +57,7 @@ def interactive_mode(vector_store: VectorStore):
         vector_store: The vector store containing the processed documents
     """
     # Create the RAG chain
+    print("Creating RAG chain with Claude 3.7 Sonnet...")
     rag_chain = create_rag_chain(vector_store)
     
     print("\nRAG Application ready! Ask questions about the content or type 'exit' to quit.")
@@ -65,10 +66,16 @@ def interactive_mode(vector_store: VectorStore):
         question = input("\nYour question: ")
         if question.lower() in ['exit', 'quit', 'q']:
             break
-            
-        # Process the question through the RAG chain
-        answer = query_rag_chain(rag_chain, question)
-        print(f"\nAnswer: {answer}")
+        
+        print("Retrieving relevant information...")
+        
+        try:
+            # Process the question through the RAG chain
+            answer = query_rag_chain(rag_chain, question)
+            print(f"\nAnswer: {answer}")
+        except Exception as e:
+            print(f"\nError processing your question: {str(e)}")
+            print("Please try again with a different question.")
 
 if __name__ == "__main__":
     main()
