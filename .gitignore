@@ -1,0 +1,4 @@
+.aider*
+.idea/
+__pycache__/
+venv/
