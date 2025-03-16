@@ -57,7 +57,7 @@ def interactive_mode(vector_store: VectorStore):
         vector_store: The vector store containing the processed documents
     """
     # Create the RAG chain
-    print("Creating RAG chain with Claude 3.7 Sonnet...")
+    print("Creating RAG chain with Claude 3 Sonnet...")
     rag_chain = create_rag_chain(vector_store)
     
     print("\nRAG Application ready! Ask questions about the content or type 'exit' to quit.")
