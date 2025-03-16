@@ -42,9 +42,30 @@ def load_documents_from_url(url: str) -> List[Document]:
     Returns:
         A list of Document objects
     """
-    # TODO: Implement document loading from URL using WebBaseLoader
-    # Use BeautifulSoup to parse and extract relevant content
-    pass
+    print(f"Loading content from: {url}")
+    
+    # Use WebBaseLoader to fetch the content
+    loader = WebBaseLoader(
+        web_paths=[url],
+        bs_kwargs=dict(
+            parse_only=bs4.SoupStrainer(
+                ["p", "h1", "h2", "h3", "h4", "h5", "article", "section", "div", "main"]
+            )
+        )
+    )
+    
+    documents = loader.load()
+    
+    # Print the content for demonstration
+    if documents:
+        print("\n--- Page Content ---\n")
+        for doc in documents:
+            print(doc.page_content[:1000] + "...\n" if len(doc.page_content) > 1000 else doc.page_content)
+        print("\n--- End of Content ---\n")
+    else:
+        print("No content was loaded from the URL.")
+    
+    return documents
 
 def split_documents(documents: List[Document]) -> List[Document]:
     """

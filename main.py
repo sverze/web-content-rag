@@ -18,7 +18,7 @@ from langchain import hub
 from langgraph.graph import START, StateGraph
 from typing_extensions import TypedDict
 
-from document_processor import load_and_process_url
+from document_processor import load_and_process_url, load_documents_from_url
 from rag_engine import create_rag_chain, query_rag_chain
 
 def main():
@@ -38,13 +38,17 @@ def main():
     # Initialize the RAG application
     if args.url:
         # Process the URL provided as argument
-        vector_store = load_and_process_url(args.url)
-        interactive_mode(vector_store)
+        documents = load_documents_from_url(args.url)
+        print("Document loading complete. Other functionality not yet implemented.")
+        # vector_store = load_and_process_url(args.url)
+        # interactive_mode(vector_store)
     else:
         # Interactive mode from the beginning
         url = input("Please enter a URL to analyze: ")
-        vector_store = load_and_process_url(url)
-        interactive_mode(vector_store)
+        documents = load_documents_from_url(url)
+        print("Document loading complete. Other functionality not yet implemented.")
+        # vector_store = load_and_process_url(url)
+        # interactive_mode(vector_store)
 
 def interactive_mode(vector_store: VectorStore):
     """
