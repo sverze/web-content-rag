@@ -38,16 +38,14 @@ def main():
     # Initialize the RAG application
     if args.url:
         # Process the URL provided as argument
-        documents = load_documents_from_url(args.url)
-        print("Document loading complete. Other functionality not yet implemented.")
-        # vector_store = load_and_process_url(args.url)
+        vector_store = load_and_process_url(args.url)
+        print("Document processing complete. Vector store created.")
         # interactive_mode(vector_store)
     else:
         # Interactive mode from the beginning
         url = input("Please enter a URL to analyze: ")
-        documents = load_documents_from_url(url)
-        print("Document loading complete. Other functionality not yet implemented.")
-        # vector_store = load_and_process_url(url)
+        vector_store = load_and_process_url(url)
+        print("Document processing complete. Vector store created.")
         # interactive_mode(vector_store)
 
 def interactive_mode(vector_store: VectorStore):

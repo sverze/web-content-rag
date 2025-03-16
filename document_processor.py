@@ -77,8 +77,21 @@ def split_documents(documents: List[Document]) -> List[Document]:
     Returns:
         List of split document chunks
     """
-    # TODO: Implement document splitting using RecursiveCharacterTextSplitter
-    pass
+    print("Splitting documents into chunks...")
+    
+    # Create a text splitter with appropriate chunk size and overlap
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+        add_start_index=True,
+    )
+    
+    # Split the documents
+    split_docs = text_splitter.split_documents(documents)
+    
+    print(f"Split {len(documents)} documents into {len(split_docs)} chunks.")
+    
+    return split_docs
 
 def create_vector_store(documents: List[Document]) -> VectorStore:
     """
@@ -90,5 +103,14 @@ def create_vector_store(documents: List[Document]) -> VectorStore:
     Returns:
         A vector store containing the indexed documents
     """
-    # TODO: Implement vector store creation using OpenAIEmbeddings and FAISS
-    pass
+    print("Creating vector store from document chunks...")
+    
+    # Initialize the OpenAI embeddings
+    embeddings = OpenAIEmbeddings()
+    
+    # Create a FAISS vector store from the documents
+    vector_store = FAISS.from_documents(documents, embeddings)
+    
+    print(f"Vector store created with {len(documents)} document chunks.")
+    
+    return vector_store
