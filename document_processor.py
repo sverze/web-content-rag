@@ -11,7 +11,7 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.vectorstores import VectorStore
-from langchain.vectorstores.faiss import FAISS
+from langchain_community.vectorstores import FAISS
 
 def load_and_process_url(url: str) -> VectorStore:
     """

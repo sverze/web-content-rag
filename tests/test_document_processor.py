@@ -45,7 +45,7 @@ class TestDocumentProcessor(unittest.TestCase):
         """Test splitting documents into chunks."""
         # Create a longer document for splitting
         long_document = Document(
-            page_content="This is a longer document that should be split into multiple chunks. " * 10,
+            page_content="This is a longer document that should be split into multiple chunks. " * 50,
             metadata={"source": "long_doc"}
         )
         
