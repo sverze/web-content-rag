@@ -35,7 +35,7 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
     
     # Define the generate function
     def generate(state: State):
-        # Get a prompt from the hub or create a custom one
+        # Get a prompt from the hub
         prompt = hub.pull("rlm/rag-prompt")
         
         # Join the document contents
