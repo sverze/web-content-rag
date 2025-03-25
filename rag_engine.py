@@ -28,6 +28,9 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
     Returns:
         A compiled LangGraph for RAG
     """
+    # Get a prompt from the hub
+    prompt = hub.pull("rlm/rag-prompt")
+    
     # Define the retrieve function
     def retrieve(state: State):
         retrieved_docs = vector_store.similarity_search(state["question"])
@@ -35,8 +38,6 @@ def create_rag_chain(vector_store: VectorStore) -> Any:
     
     # Define the generate function
     def generate(state: State):
-        # Get a prompt from the hub
-        prompt = hub.pull("rlm/rag-prompt")
         
         # Join the document contents
         docs_content = "\n\n".join(doc.page_content for doc in state["context"])
